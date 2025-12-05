@@ -5,8 +5,37 @@ import { Input } from "@/components/ui/Input"
 import { Card } from "@/components/ui/Card"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
+import { useState } from "react"
+import { useAuth } from "@/context/AuthContext"
+import { useRouter } from "next/navigation"
 
 export default function LoginPage() {
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [error, setError] = useState("")
+    const [isLoading, setIsLoading] = useState(false)
+    const { login } = useAuth()
+    const router = useRouter()
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
+        setError("")
+        setIsLoading(true)
+
+        try {
+            const success = await login(email, password)
+            if (success) {
+                router.push("/dashboard")
+            } else {
+                setError("Invalid email or password")
+            }
+        } catch (err) {
+            setError("Something went wrong")
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
     return (
         <div className="min-h-screen grid md:grid-cols-2">
             {/* Left Side - Image */}
@@ -38,22 +67,42 @@ export default function LoginPage() {
                         <p className="text-muted-foreground">Enter your email to access your account</p>
                     </div>
 
-                    <form className="space-y-4">
+                    <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="space-y-2">
                             <label className="text-sm font-medium" htmlFor="email">Email</label>
-                            <Input id="email" type="email" placeholder="name@example.com" />
+                            <Input
+                                id="email"
+                                type="email"
+                                placeholder="name@example.com"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                            />
                         </div>
                         <div className="space-y-2">
                             <div className="flex justify-between items-center">
                                 <label className="text-sm font-medium" htmlFor="password">Password</label>
                                 <Link href="#" className="text-sm text-primary hover:underline">Forgot password?</Link>
                             </div>
-                            <Input id="password" type="password" placeholder="••••••••" />
+                            <Input
+                                id="password"
+                                type="password"
+                                placeholder="••••••••"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                            />
                         </div>
 
-                        <Link href="/dashboard">
-                            <Button className="w-full mt-6" size="lg">Sign In</Button>
-                        </Link>
+                        {error && (
+                            <div className="p-3 text-sm text-red-500 bg-red-50 rounded-lg">
+                                {error}
+                            </div>
+                        )}
+
+                        <Button className="w-full mt-6" size="lg" disabled={isLoading}>
+                            {isLoading ? "Signing in..." : "Sign In"}
+                        </Button>
                     </form>
 
                     <div className="mt-6 text-center text-sm">
@@ -61,6 +110,12 @@ export default function LoginPage() {
                         <Link href="/signup" className="font-medium text-primary hover:underline">
                             Sign up
                         </Link>
+                    </div>
+
+                    <div className="mt-8 p-4 bg-blue-50 text-blue-700 rounded-lg text-sm">
+                        <p className="font-semibold mb-1">Demo Credentials:</p>
+                        <p>Email: user@example.com</p>
+                        <p>Password: password</p>
                     </div>
                 </div>
             </div>
