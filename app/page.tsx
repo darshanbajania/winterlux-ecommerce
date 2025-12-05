@@ -1,11 +1,11 @@
 "use client"
-
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
 import { ArrowRight, Snowflake, Wind, Thermometer } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
+import { products } from "@/lib/products"
 
 export default function Home() {
   return (
@@ -40,9 +40,11 @@ export default function Home() {
               Premium winter wear designed for extreme comfort and timeless style. Experience warmth like never before.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="gap-2 bg-white text-primary hover:bg-white/90 shadow-xl border-none">
-                Shop Collection <ArrowRight className="w-4 h-4" />
-              </Button>
+              <Link href="/shop">
+                <Button size="lg" className="gap-2 bg-white text-primary hover:bg-white/90 shadow-xl border-none">
+                  Shop Collection <ArrowRight className="w-4 h-4" />
+                </Button>
+              </Link>
               <Button variant="outline" size="lg" className="text-white border-white hover:bg-white/20 hover:text-white">
                 View Lookbook
               </Button>
@@ -80,17 +82,14 @@ export default function Home() {
               <h2 className="text-3xl font-bold mb-2">Trending Now</h2>
               <p className="text-muted-foreground">Our most popular winter essentials.</p>
             </div>
-            <Button variant="ghost" className="gap-2">View All <ArrowRight className="w-4 h-4" /></Button>
+            <Link href="/shop">
+              <Button variant="ghost" className="gap-2">View All <ArrowRight className="w-4 h-4" /></Button>
+            </Link>
           </div>
 
           <div className="grid md:grid-cols-4 gap-6">
-            {[
-              { name: "Arctic Parka", price: "$299", color: "Midnight Blue", image: "/images/parka.png", slug: "arctic-parka" },
-              { name: "Alpine Shell", price: "$189", color: "Glacier Grey", image: "/images/shell.png", slug: "alpine-shell" },
-              { name: "Merino Layer", price: "$89", color: "Charcoal", image: "/images/layer.png", slug: "merino-layer" },
-              { name: "Frost Boots", price: "$249", color: "Black", image: "/images/boots.png", slug: "frost-boots" }
-            ].map((item, i) => (
-              <Link key={i} href={`/product/${item.slug}`}>
+            {Object.values(products).map((item) => (
+              <Link key={item.id} href={`/product/${item.slug}`}>
                 <Card className="overflow-hidden group cursor-pointer border-none shadow-sm hover:shadow-xl transition-all duration-300">
                   <div className="aspect-[3/4] bg-white relative mb-4 overflow-hidden rounded-xl">
                     <div className="absolute inset-0 flex items-center justify-center p-4">
@@ -110,7 +109,7 @@ export default function Home() {
                     <h3 className="font-bold text-lg">{item.name}</h3>
                     <p className="text-sm text-muted-foreground mb-3">{item.color}</p>
                     <div className="flex justify-between items-center">
-                      <span className="font-bold text-lg">{item.price}</span>
+                      <span className="font-bold text-lg">{item.displayPrice}</span>
                       <Button size="sm" variant="secondary" className="rounded-full w-8 h-8 p-0 flex items-center justify-center">
                         <ArrowRight className="w-4 h-4" />
                       </Button>
