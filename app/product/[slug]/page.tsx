@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/Card"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeft, ShoppingCart, Snowflake, Wind, Thermometer } from "lucide-react"
-import { notFound } from "next/navigation"
+import { notFound, useParams } from "next/navigation"
 
 const products = {
     "arctic-parka": {
@@ -46,8 +46,10 @@ const products = {
     }
 }
 
-export default function ProductPage({ params }: { params: { slug: string } }) {
-    const product = products[params.slug as keyof typeof products]
+export default function ProductPage() {
+    const params = useParams()
+    const slug = params?.slug as string
+    const product = products[slug as keyof typeof products]
 
     if (!product) {
         notFound()
