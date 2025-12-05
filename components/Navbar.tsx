@@ -1,7 +1,12 @@
+"use client"
+
 import Link from "next/link"
 import { Button } from "@/components/ui/Button"
+import { useCart } from "@/context/CartContext"
 
 export function Navbar() {
+    const { cartCount, setIsCartOpen } = useCart()
+
     return (
         <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-white/10">
             <div className="container mx-auto px-6 h-20 flex items-center justify-between">
@@ -17,7 +22,9 @@ export function Navbar() {
                     <Link href="/login">
                         <Button variant="ghost" size="sm">Log in</Button>
                     </Link>
-                    <Button size="sm">Cart (0)</Button>
+                    <Button size="sm" onClick={() => setIsCartOpen(true)}>
+                        Cart ({cartCount})
+                    </Button>
                 </div>
             </div>
         </nav>

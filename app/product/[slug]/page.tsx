@@ -6,11 +6,15 @@ import Image from "next/image"
 import Link from "next/link"
 import { ArrowLeft, ShoppingCart, Snowflake, Wind, Thermometer } from "lucide-react"
 import { notFound, useParams } from "next/navigation"
+import { useCart } from "@/context/CartContext"
+import { useState } from "react"
 
 const products = {
     "arctic-parka": {
+        id: "arctic-parka",
         name: "Arctic Parka",
-        price: "$299",
+        price: 299,
+        displayPrice: "$299",
         color: "Midnight Blue",
         image: "/images/parka.png",
         description: "The ultimate winter companion. Our Arctic Parka features premium down insulation rated for extreme cold, a detachable fur-lined hood, and windproof outer shell. Designed for temperatures down to -30°C.",
@@ -18,8 +22,10 @@ const products = {
         sizes: ["XS", "S", "M", "L", "XL", "XXL"]
     },
     "alpine-shell": {
+        id: "alpine-shell",
         name: "Alpine Shell",
-        price: "$189",
+        price: 189,
+        displayPrice: "$189",
         color: "Glacier Grey",
         image: "/images/shell.png",
         description: "Lightweight yet incredibly protective. The Alpine Shell uses advanced technical fabrics to provide superior wind and water resistance while maintaining breathability for active winter adventures.",
@@ -27,8 +33,10 @@ const products = {
         sizes: ["XS", "S", "M", "L", "XL", "XXL"]
     },
     "merino-layer": {
+        id: "merino-layer",
         name: "Merino Layer",
-        price: "$89",
+        price: 89,
+        displayPrice: "$89",
         color: "Charcoal",
         image: "/images/layer.png",
         description: "Experience the natural warmth of premium merino wool. This base layer regulates temperature, wicks moisture, and naturally resists odors for all-day comfort.",
@@ -36,8 +44,10 @@ const products = {
         sizes: ["XS", "S", "M", "L", "XL", "XXL"]
     },
     "frost-boots": {
+        id: "frost-boots",
         name: "Frost Boots",
-        price: "$249",
+        price: 249,
+        displayPrice: "$249",
         color: "Black",
         image: "/images/boots.png",
         description: "Rugged winter boots built to last. Featuring waterproof leather construction, thermal insulation, and aggressive tread pattern for superior traction on ice and snow.",
@@ -50,9 +60,26 @@ export default function ProductPage() {
     const params = useParams()
     const slug = params?.slug as string
     const product = products[slug as keyof typeof products]
+    const { addToCart } = useCart()
+    const [selectedSize, setSelectedSize] = useState<string>("")
 
     if (!product) {
         notFound()
+    }
+
+    const handleAddToCart = () => {
+        if (!selectedSize) {
+            alert("Please select a size")
+            return
+        }
+        addToCart({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.image,
+            color: product.color,
+            size: selectedSize
+        })
     }
 
     return (
@@ -79,7 +106,7 @@ export default function ProductPage() {
                         <div className="mb-6">
                             <h1 className="text-4xl font-bold mb-2">{product.name}</h1>
                             <p className="text-xl text-muted-foreground mb-4">{product.color}</p>
-                            <p className="text-3xl font-bold text-primary">{product.price}</p>
+                            <p className="text-3xl font-bold text-primary">{product.displayPrice}</p>
                         </div>
 
                         <p className="text-lg leading-relaxed mb-8">{product.description}</p>
@@ -104,7 +131,11 @@ export default function ProductPage() {
                                 {product.sizes.map((size) => (
                                     <button
                                         key={size}
-                                        className="px-6 py-3 border border-slate-200 rounded-xl hover:border-primary hover:bg-slate-50 transition-colors font-medium"
+                                        onClick={() => setSelectedSize(size)}
+                                        className={`px-6 py-3 border rounded-xl transition-colors font-medium ${selectedSize === size
+                                                ? "border-primary bg-primary text-white"
+                                                : "border-slate-200 hover:border-primary hover:bg-slate-50"
+                                            }`}
                                     >
                                         {size}
                                     </button>
@@ -114,7 +145,7 @@ export default function ProductPage() {
 
                         {/* Actions */}
                         <div className="flex gap-4">
-                            <Button size="lg" className="flex-1 gap-2">
+                            <Button size="lg" className="flex-1 gap-2" onClick={handleAddToCart}>
                                 <ShoppingCart className="w-5 h-5" />
                                 Add to Cart
                             </Button>
