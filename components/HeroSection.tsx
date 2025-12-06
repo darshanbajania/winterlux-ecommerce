@@ -11,15 +11,16 @@ export default function HeroSection() {
         <section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
             <div className="absolute inset-0 z-0">
                 <Image
-                    src="/images/hero.png"
+                    src="/images/hero-desktop.png"
                     alt="Winter Landscape"
                     fill
                     className="object-cover"
                     priority
                     quality={100}
                 />
-                <div className="absolute inset-0 bg-black/20" />
             </div>
+
+            <div className="absolute inset-0 bg-black/20 z-0" />
 
             <div className="container mx-auto relative z-10 px-6 text-center text-white">
                 <motion.div
@@ -44,7 +45,7 @@ export default function HeroSection() {
                         </Link>
                         <Link href="/lookbook">
                             <Button variant="outline" size="lg" className="text-white border-white hover:bg-white/20 hover:text-white">
-                                View Lookbook
+                                Explore the Edit
                             </Button>
                         </Link>
                     </div>
