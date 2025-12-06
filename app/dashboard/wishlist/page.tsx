@@ -5,6 +5,8 @@ import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight, Trash2 } from "lucide-react"
 
+export const dynamic = "force-dynamic";
+
 export default async function WishlistPage() {
     const products = await fetchProducts();
     // Simulate some wishlisted items (first 3 products)
