@@ -1,16 +1,31 @@
+"use client"
+
 import { Card } from "@/components/ui/Card"
 import { Button } from "@/components/ui/Button"
-import { fetchProducts } from "@/lib/api"
 import Image from "next/image"
 import Link from "next/link"
-import { ArrowRight, Trash2 } from "lucide-react"
+import { ArrowRight, Trash2, Loader2 } from "lucide-react"
+import { useWishlist } from "@/hooks/useWishlist"
 
-export const dynamic = "force-dynamic";
+export default function WishlistPage() {
+    const { wishlistItems, isLoading, isError, deleteFromWishlist, isDeleting } = useWishlist()
 
-export default async function WishlistPage() {
-    const products = await fetchProducts();
-    // Simulate some wishlisted items (first 3 products)
-    const wishlistItems = products.slice(0, 3)
+    if (isLoading) {
+        return (
+            <div className="flex justify-center items-center h-96">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            </div>
+        )
+    }
+
+    if (isError || !wishlistItems) {
+        return (
+            <div className="flex flex-col items-center justify-center h-96">
+                <p className="text-red-500 mb-4">Failed to load wishlist.</p>
+                <Button onClick={() => window.location.reload()}>Try Again</Button>
+            </div>
+        )
+    }
 
     return (
         <div className="max-w-5xl mx-auto">
@@ -41,8 +56,14 @@ export default async function WishlistPage() {
                                     <h3 className="font-bold text-lg">{item.name}</h3>
                                     <p className="text-sm text-muted-foreground">{item.color}</p>
                                 </div>
-                                <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-700 hover:bg-red-50 p-2 h-auto">
-                                    <Trash2 className="w-4 h-4" />
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="text-red-500 hover:text-red-700 hover:bg-red-50 p-2 h-auto"
+                                    onClick={() => deleteFromWishlist(item.id)}
+                                    disabled={isDeleting}
+                                >
+                                    {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
                                 </Button>
                             </div>
                             <div className="flex justify-between items-center mt-2">
