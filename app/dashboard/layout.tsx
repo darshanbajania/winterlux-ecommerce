@@ -5,12 +5,15 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { LayoutDashboard, ShoppingBag, Heart, Settings, LogOut } from "lucide-react"
 
+import { useAuth } from "@/context/AuthContext"
+
 export default function DashboardLayout({
     children,
 }: {
     children: React.ReactNode
 }) {
     const pathname = usePathname()
+    const { logout } = useAuth()
 
     const links = [
         { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
@@ -48,12 +51,16 @@ export default function DashboardLayout({
                     </nav>
                 </div>
                 <div className="p-6 border-t border-slate-100 mt-auto">
-                    <button className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-red-50 hover:text-red-600 w-full transition-colors">
+                    <button
+                        onClick={logout}
+                        className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-red-50 hover:text-red-600 w-full transition-colors"
+                    >
                         <LogOut className="w-4 h-4" />
                         Sign Out
                     </button>
                 </div>
             </aside>
+
 
             {/* Main Content */}
             <main className="flex-1 p-8">

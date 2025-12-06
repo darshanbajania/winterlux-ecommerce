@@ -27,10 +27,6 @@ export function Navbar() {
                             <Link href="/dashboard" className="text-sm font-medium hidden md:block hover:text-primary transition-colors">
                                 Hi, {user.name}
                             </Link>
-                            <Button variant="ghost" size="sm" onClick={logout} className="text-muted-foreground hover:text-primary">
-                                <LogOut className="w-4 h-4 mr-2" />
-                                Logout
-                            </Button>
                         </div>
                     ) : (
                         <Link href="/login">
