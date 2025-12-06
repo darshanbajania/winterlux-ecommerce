@@ -1,57 +1,18 @@
-"use client"
-import { motion } from "framer-motion"
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
 import { ArrowRight, Snowflake, Wind, Thermometer } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { products } from "@/lib/products"
+import { fetchProducts } from "@/lib/api"
+import HeroSection from "@/components/HeroSection"
 
-export default function Home() {
+export default async function Home() {
+  const products = await fetchProducts();
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/images/hero.png"
-            alt="Winter Landscape"
-            fill
-            className="object-cover"
-            priority
-            quality={100}
-          />
-          <div className="absolute inset-0 bg-black/20" />
-        </div>
-
-        <div className="container mx-auto relative z-10 px-6 text-center text-white">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <div className="inline-block mb-4 px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-md text-white text-sm font-medium border border-white/30">
-              New Winter Collection 2025
-            </div>
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6 drop-shadow-lg">
-              Embrace the Chill
-            </h1>
-            <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto text-balance drop-shadow-md">
-              Premium winter wear designed for extreme comfort and timeless style. Experience warmth like never before.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/shop">
-                <Button size="lg" className="gap-2 bg-white text-primary hover:bg-white/90 shadow-xl border-none">
-                  Shop Collection <ArrowRight className="w-4 h-4" />
-                </Button>
-              </Link>
-              <Button variant="outline" size="lg" className="text-white border-white hover:bg-white/20 hover:text-white">
-                View Lookbook
-              </Button>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+      <HeroSection />
 
       {/* Features Section */}
       <section id="about" className="py-24 bg-white">
@@ -88,7 +49,7 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-4 gap-6">
-            {Object.values(products).map((item) => (
+            {products.slice(0, 4).map((item) => (
               <Link key={item.id} href={`/product/${item.slug}`}>
                 <Card className="overflow-hidden group cursor-pointer border-none shadow-sm hover:shadow-xl transition-all duration-300">
                   <div className="aspect-[3/4] bg-white relative mb-4 overflow-hidden rounded-xl">
@@ -109,7 +70,7 @@ export default function Home() {
                     <h3 className="font-bold text-lg">{item.name}</h3>
                     <p className="text-sm text-muted-foreground mb-3">{item.color}</p>
                     <div className="flex justify-between items-center">
-                      <span className="font-bold text-lg">{item.displayPrice}</span>
+                      <span className="font-bold text-lg">{item.display_price}</span>
                       <Button size="sm" variant="secondary" className="rounded-full w-8 h-8 p-0 flex items-center justify-center">
                         <ArrowRight className="w-4 h-4" />
                       </Button>
