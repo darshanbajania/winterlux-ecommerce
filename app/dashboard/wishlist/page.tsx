@@ -1,15 +1,14 @@
-"use client"
-
 import { Card } from "@/components/ui/Card"
 import { Button } from "@/components/ui/Button"
-import { products } from "@/lib/products"
+import { fetchProducts } from "@/lib/api"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight, Trash2 } from "lucide-react"
 
-export default function WishlistPage() {
+export default async function WishlistPage() {
+    const products = await fetchProducts();
     // Simulate some wishlisted items (first 3 products)
-    const wishlistItems = Object.values(products).slice(0, 3)
+    const wishlistItems = products.slice(0, 3)
 
     return (
         <div className="max-w-5xl mx-auto">
@@ -45,7 +44,7 @@ export default function WishlistPage() {
                                 </Button>
                             </div>
                             <div className="flex justify-between items-center mt-2">
-                                <span className="font-bold text-lg">{item.displayPrice}</span>
+                                <span className="font-bold text-lg">{item.display_price}</span>
                                 <Link href={`/product/${item.slug}`}>
                                     <Button size="sm">
                                         View
