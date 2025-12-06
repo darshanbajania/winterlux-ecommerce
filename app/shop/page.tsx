@@ -5,6 +5,8 @@ import Image from "next/image"
 import Link from "next/link"
 import { fetchProducts } from "@/lib/api"
 
+export const dynamic = "force-dynamic";
+
 export default async function ShopPage() {
     const products = await fetchProducts();
 
