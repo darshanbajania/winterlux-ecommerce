@@ -2,11 +2,12 @@
 
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
-import { ArrowRight, Snowflake, Wind, Thermometer, Loader2 } from "lucide-react"
+import { ArrowRight, Snowflake, Wind, Thermometer, ShieldCheck, Droplets, Feather } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useProducts } from "@/hooks/useProducts"
 import HeroSection from "@/components/HeroSection"
+import { motion } from "framer-motion"
 
 export default function Home() {
   const { data: products, isLoading } = useProducts()
@@ -16,23 +17,88 @@ export default function Home() {
       {/* Hero Section */}
       <HeroSection />
 
-      {/* Features Section */}
-      <section id="about" className="py-24 bg-white">
+      {/* About / Features Section - Bento Grid */}
+      <section id="about" className="py-24 bg-white overflow-hidden">
         <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              { icon: Snowflake, title: "Extreme Warmth", desc: "Insulated with premium down for temperatures down to -30°C." },
-              { icon: Wind, title: "Windproof", desc: "Advanced shell technology blocks wind while remaining breathable." },
-              { icon: Thermometer, title: "Temperature Control", desc: "Smart fabrics adapt to your body heat for optimal comfort." },
-            ].map((feature, i) => (
-              <Card key={i} className="text-center hover:shadow-lg transition-shadow border-none shadow-none bg-slate-50/50">
-                <div className="mb-6 inline-flex p-4 rounded-2xl bg-blue-50 text-blue-600">
-                  <feature.icon className="w-8 h-8" />
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Engineered for the Extremes</h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              Our proprietary technology combines aerospace-grade insulation with adaptative fabrics.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[300px]">
+            {/* Feature 1: Large Card with details */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="md:col-span-2 row-span-1 relative overflow-hidden rounded-3xl bg-slate-50 border border-slate-100 p-8 flex flex-col justify-center group"
+            >
+              <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity duration-500">
+                <Snowflake className="w-48 h-48 text-blue-500" />
+              </div>
+              <div className="relative z-10 max-w-md">
+                <div className="mb-4 inline-flex p-3 rounded-xl bg-blue-100 text-blue-600">
+                  <Snowflake className="w-6 h-6" />
                 </div>
-                <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{feature.desc}</p>
-              </Card>
-            ))}
+                <h3 className="text-2xl font-bold mb-2">Cryo-Protection™ Insulation</h3>
+                <p className="text-slate-600 leading-relaxed">
+                  Tested in Antarctic conditions, our triple-layer down alternative retains 99.8% of body heat while remaining ultra-lightweight. Rated for temperatures as low as -40°C.
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Feature 2: Image Card (Visual Texture) */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="md:col-span-1 row-span-2 relative overflow-hidden rounded-3xl group"
+            >
+              <Image
+                src="/images/fabric-macro.png"
+                alt="Waterproof Fabric Texture"
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-8">
+                <h3 className="text-white text-2xl font-bold mb-1">Hydro-Shield Shell</h3>
+                <p className="text-white/80 text-sm">Waterproof. Breathable. Indestructible.</p>
+              </div>
+            </motion.div>
+
+            {/* Feature 3: Compact Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="md:col-span-1 row-span-1 rounded-3xl bg-slate-900 text-white p-8 flex flex-col justify-between group hover:shadow-2xl transition-shadow"
+            >
+              <div>
+                <Wind className="w-10 h-10 mb-4 text-blue-400 group-hover:translate-x-1 transition-transform" />
+                <h3 className="text-xl font-bold mb-2">Windproof Core</h3>
+              </div>
+              <p className="text-slate-400 text-sm">
+                Advanced membrane technology blocks 100% of wind chill without compromising breathability.
+              </p>
+            </motion.div>
+
+            {/* Feature 4: Compact Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="md:col-span-1 row-span-1 rounded-3xl bg-blue-50 border border-blue-100 p-8 flex flex-col justify-between group hover:border-blue-300 transition-colors"
+            >
+              <div>
+                <Feather className="w-10 h-10 mb-4 text-blue-600 group-hover:-translate-y-1 transition-transform" />
+                <h3 className="text-xl font-bold mb-2 text-slate-900">Zero-Gravity Feel</h3>
+              </div>
+              <p className="text-slate-600 text-sm">
+                Maximum warmth with minimal bulk. Designed for unrestricted movement and all-day comfort.
+              </p>
+            </motion.div>
           </div>
         </div>
       </section>
