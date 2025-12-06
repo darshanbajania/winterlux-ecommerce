@@ -42,9 +42,11 @@ export default function HeroSection() {
                                 Shop Collection <ArrowRight className="w-4 h-4" />
                             </Button>
                         </Link>
-                        <Button variant="outline" size="lg" className="text-white border-white hover:bg-white/20 hover:text-white">
-                            View Lookbook
-                        </Button>
+                        <Link href="/lookbook">
+                            <Button variant="outline" size="lg" className="text-white border-white hover:bg-white/20 hover:text-white">
+                                View Lookbook
+                            </Button>
+                        </Link>
                     </div>
                 </motion.div>
             </div>
