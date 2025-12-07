@@ -6,11 +6,13 @@ import { useRouter } from "next/navigation"
 interface User {
     email: string
     name: string
+    is_staff: boolean
+    is_superuser: boolean
 }
 
 interface AuthContextType {
     user: User | null
-    login: (email: string, password: string) => Promise<boolean>
+    login: (email: string, password: string) => Promise<{ success: boolean; role?: string }>
     logout: () => void
     isLoading: boolean
 }
@@ -36,15 +38,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setIsLoading(false)
     }, [])
 
-    const login = async (email: string, password: string): Promise<boolean> => {
-        // Dummy authentication
-        if (email === "user@example.com" && password === "password") {
-            const newUser = { email, name: "Demo User" }
-            setUser(newUser)
-            localStorage.setItem("auth_user", JSON.stringify(newUser))
-            return true
+    const login = async (email: string, password: string): Promise<{ success: boolean; role?: string }> => {
+        try {
+            const response = await fetch("http://127.0.0.1:8000/api/accounts/token/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ username: email, password }),
+            })
+
+            if (response.ok) {
+                const data = await response.json()
+                const newUser = {
+                    email: data.email,
+                    name: data.username,
+                    is_staff: data.is_staff,
+                    is_superuser: data.is_superuser
+                }
+                setUser(newUser)
+                localStorage.setItem("auth_user", JSON.stringify(newUser))
+                localStorage.setItem("access_token", data.access)
+                localStorage.setItem("refresh_token", data.refresh)
+
+                return {
+                    success: true,
+                    role: data.is_staff ? 'admin' : 'user'
+                }
+            }
+        } catch (error) {
+            console.error("Login failed", error)
         }
-        return false
+        return { success: false }
     }
 
     const logout = () => {

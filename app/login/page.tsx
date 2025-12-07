@@ -23,9 +23,13 @@ export default function LoginPage() {
         setIsLoading(true)
 
         try {
-            const success = await login(email, password)
+            const { success, role } = await login(email, password)
             if (success) {
-                router.push("/dashboard")
+                if (role === 'admin') {
+                    router.push("/admin/dashboard")
+                } else {
+                    router.push("/dashboard")
+                }
             } else {
                 setError("Invalid email or password")
             }
