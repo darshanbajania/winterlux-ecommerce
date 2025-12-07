@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/Card"
 import { useAuth } from "@/context/AuthContext"
 import { ShoppingBag, Users, AlertCircle, DollarSign } from "lucide-react"
 import { useState, useEffect } from "react"
+import { API_BASE_URL } from "@/lib/utils"
 import {
     LineChart,
     Line,
@@ -49,7 +50,7 @@ export default function AdminDashboard() {
         const fetchStats = async () => {
             const token = localStorage.getItem("access_token")
             try {
-                const res = await fetch("http://127.0.0.1:8000/api/accounts/admin/stats/", {
+                const res = await fetch(`${API_BASE_URL}/accounts/admin/stats/`, {
                     headers: { "Authorization": `Bearer ${token}` }
                 })
                 if (res.ok) {

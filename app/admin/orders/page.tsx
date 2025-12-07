@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
 import { useState, useEffect } from "react"
+import { API_BASE_URL } from "@/lib/utils"
 
 export default function AdminOrdersPage() {
     const [orders, setOrders] = useState<any[]>([])
@@ -11,7 +12,7 @@ export default function AdminOrdersPage() {
         const fetchOrders = async () => {
             const token = localStorage.getItem("access_token")
             try {
-                const res = await fetch("http://127.0.0.1:8000/api/orders/", {
+                const res = await fetch(`${API_BASE_URL}/orders/`, {
                     headers: { "Authorization": `Bearer ${token}` }
                 })
                 if (res.ok) {

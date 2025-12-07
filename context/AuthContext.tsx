@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import { API_BASE_URL } from "@/lib/utils"
 
 interface User {
     email: string
@@ -40,7 +41,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const login = async (email: string, password: string): Promise<{ success: boolean; role?: string }> => {
         try {
-            const response = await fetch("http://127.0.0.1:8000/api/accounts/token/", {
+            const response = await fetch(`${API_BASE_URL}/accounts/token/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

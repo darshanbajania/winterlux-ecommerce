@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
 import { Mail, User } from "lucide-react"
 import { useState, useEffect } from "react"
+import { API_BASE_URL } from "@/lib/utils"
 
 export default function AdminUsersPage() {
     const [users, setUsers] = useState<any[]>([])
@@ -16,8 +17,8 @@ export default function AdminUsersPage() {
 
             try {
                 const [userRes, ticketRes] = await Promise.all([
-                    fetch("http://127.0.0.1:8000/api/accounts/admin/users/", { headers }),
-                    fetch("http://127.0.0.1:8000/api/tickets/", { headers })
+                    fetch(`${API_BASE_URL}/accounts/admin/users/`, { headers }),
+                    fetch(`${API_BASE_URL}/tickets/`, { headers })
                 ])
 
                 if (userRes.ok) setUsers(await userRes.json())

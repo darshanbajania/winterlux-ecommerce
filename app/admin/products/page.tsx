@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/Card"
 import { Input } from "@/components/ui/Input"
 import { Plus, Search, Edit, Trash2, X } from "lucide-react"
 import { useState, useEffect } from "react"
+import { API_BASE_URL } from "@/lib/utils"
 
 interface Product {
     id: string
@@ -42,7 +43,7 @@ export default function AdminProductsPage() {
 
     const fetchProducts = async () => {
         try {
-            const res = await fetch("http://127.0.0.1:8000/api/products/")
+            const res = await fetch(`${API_BASE_URL}/products/`)
             const data = await res.json()
             setProducts(data)
         } catch (error) {
@@ -56,7 +57,7 @@ export default function AdminProductsPage() {
         if (!confirm("Are you sure?")) return
         const token = localStorage.getItem("access_token")
         try {
-            const res = await fetch(`http://127.0.0.1:8000/api/products/${slug}/`, {
+            const res = await fetch(`${API_BASE_URL}/products/${slug}/`, {
                 method: "DELETE",
                 headers: {
                     "Authorization": `Bearer ${token}`
@@ -84,7 +85,7 @@ export default function AdminProductsPage() {
         }
 
         try {
-            const res = await fetch("http://127.0.0.1:8000/api/products/", {
+            const res = await fetch(`${API_BASE_URL}/products/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
