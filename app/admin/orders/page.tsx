@@ -2,16 +2,28 @@
 
 import { Button } from "@/components/ui/Button"
 import { Card } from "@/components/ui/Card"
-import { Badge } from "lucide-react"
+import { useState, useEffect } from "react"
 
 export default function AdminOrdersPage() {
-    const orders = [
-        { id: "#ORD-001", customer: "John Doe", date: "2025-10-24", total: "$299.00", status: "Delivered", items: 2 },
-        { id: "#ORD-002", customer: "Sarah Smith", date: "2025-10-23", total: "$120.50", status: "Processing", items: 1 },
-        { id: "#ORD-003", customer: "Michael Brown", date: "2025-10-22", total: "$540.00", status: "Shipped", items: 3 },
-        { id: "#ORD-004", customer: "Emily Davis", date: "2025-10-21", total: "$89.99", status: "Pending", items: 1 },
-        { id: "#ORD-005", customer: "James Wilson", date: "2025-10-20", total: "$299.00", status: "Delivered", items: 1 },
-    ]
+    const [orders, setOrders] = useState<any[]>([])
+
+    useEffect(() => {
+        const fetchOrders = async () => {
+            const token = localStorage.getItem("access_token")
+            try {
+                const res = await fetch("http://127.0.0.1:8000/api/orders/", {
+                    headers: { "Authorization": `Bearer ${token}` }
+                })
+                if (res.ok) {
+                    const data = await res.json()
+                    setOrders(data)
+                }
+            } catch (e) {
+                console.error(e)
+            }
+        }
+        fetchOrders()
+    }, [])
 
     const getStatusColor = (status: string) => {
         switch (status) {
@@ -36,29 +48,26 @@ export default function AdminOrdersPage() {
                         <thead className="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-100">
                             <tr>
                                 <th className="px-6 py-4 font-medium">Order ID</th>
-                                <th className="px-6 py-4 font-medium">Customer</th>
+                                <th className="px-6 py-4 font-medium">User</th>
                                 <th className="px-6 py-4 font-medium">Date</th>
-                                <th className="px-6 py-4 font-medium">Items</th>
                                 <th className="px-6 py-4 font-medium">Total</th>
                                 <th className="px-6 py-4 font-medium">Status</th>
-                                <th className="px-6 py-4 font-medium text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
+                            {orders.length === 0 && (
+                                <tr><td colSpan={5} className="p-6 text-center text-slate-500">No orders found.</td></tr>
+                            )}
                             {orders.map((order) => (
                                 <tr key={order.id} className="hover:bg-slate-50/50 transition-colors">
-                                    <td className="px-6 py-4 font-medium text-slate-900">{order.id}</td>
-                                    <td className="px-6 py-4 text-slate-500">{order.customer}</td>
-                                    <td className="px-6 py-4 text-slate-500">{order.date}</td>
-                                    <td className="px-6 py-4 text-slate-500">{order.items} items</td>
-                                    <td className="px-6 py-4 font-medium">{order.total}</td>
+                                    <td className="px-6 py-4 font-medium text-slate-900">#{order.id}</td>
+                                    <td className="px-6 py-4 text-slate-500">{order.username || order.user_email || 'Unknown'}</td>
+                                    <td className="px-6 py-4 text-slate-500">{new Date(order.created_at).toLocaleDateString()}</td>
+                                    <td className="px-6 py-4 font-medium">${order.total_amount}</td>
                                     <td className="px-6 py-4">
                                         <span className={`inline-flex px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
                                             {order.status}
                                         </span>
-                                    </td>
-                                    <td className="px-6 py-4 text-right">
-                                        <Button variant="outline" size="sm">Details</Button>
                                     </td>
                                 </tr>
                             ))}

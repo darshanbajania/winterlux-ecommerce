@@ -2,7 +2,8 @@
 
 import { Card } from "@/components/ui/Card"
 import { useAuth } from "@/context/AuthContext"
-import { ShoppingBag, Users, AlertCircle, DollarSign, Package } from "lucide-react"
+import { ShoppingBag, Users, AlertCircle, DollarSign } from "lucide-react"
+import { useState, useEffect } from "react"
 import {
     LineChart,
     Line,
@@ -37,6 +38,29 @@ const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"]
 
 export default function AdminDashboard() {
     const { user } = useAuth()
+    const [stats, setStats] = useState({
+        total_revenue: 0,
+        total_orders: 0,
+        pending_actions: 0,
+        active_users: 0
+    })
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            const token = localStorage.getItem("access_token")
+            try {
+                const res = await fetch("http://127.0.0.1:8000/api/accounts/admin/stats/", {
+                    headers: { "Authorization": `Bearer ${token}` }
+                })
+                if (res.ok) {
+                    setStats(await res.json())
+                }
+            } catch (e) {
+                console.error(e)
+            }
+        }
+        fetchStats()
+    }, [])
 
     if (!user) return null
 
@@ -46,9 +70,6 @@ export default function AdminDashboard() {
                 <div>
                     <h1 className="text-3xl font-bold mb-2">Dashboard Overview</h1>
                     <p className="text-slate-500">Welcome back, {user.name}!</p>
-                </div>
-                <div className="flex gap-3">
-                    {/* Date filter could go here */}
                 </div>
             </div>
 
@@ -61,8 +82,7 @@ export default function AdminDashboard() {
                         </div>
                         <div>
                             <p className="text-sm text-slate-500 mb-1">Total Revenue</p>
-                            <h3 className="text-2xl font-bold">$45,231.89</h3>
-                            <span className="text-xs text-green-600 font-medium">+20.1% from last month</span>
+                            <h3 className="text-2xl font-bold">${stats.total_revenue}</h3>
                         </div>
                     </div>
                 </Card>
@@ -74,8 +94,7 @@ export default function AdminDashboard() {
                         </div>
                         <div>
                             <p className="text-sm text-slate-500 mb-1">Total Orders</p>
-                            <h3 className="text-2xl font-bold">+2350</h3>
-                            <span className="text-xs text-green-600 font-medium">+180.1% from last month</span>
+                            <h3 className="text-2xl font-bold">{stats.total_orders}</h3>
                         </div>
                     </div>
                 </Card>
@@ -87,8 +106,7 @@ export default function AdminDashboard() {
                         </div>
                         <div>
                             <p className="text-sm text-slate-500 mb-1">Pending Actions</p>
-                            <h3 className="text-2xl font-bold">12</h3>
-                            <span className="text-xs text-slate-500">Orders & Queries</span>
+                            <h3 className="text-2xl font-bold">{stats.pending_actions}</h3>
                         </div>
                     </div>
                 </Card>
@@ -100,8 +118,7 @@ export default function AdminDashboard() {
                         </div>
                         <div>
                             <p className="text-sm text-slate-500 mb-1">Active Users</p>
-                            <h3 className="text-2xl font-bold">+573</h3>
-                            <span className="text-xs text-green-600 font-medium">+201 since last hour</span>
+                            <h3 className="text-2xl font-bold">{stats.active_users}</h3>
                         </div>
                     </div>
                 </Card>
@@ -112,7 +129,7 @@ export default function AdminDashboard() {
                 {/* Sales Chart */}
                 <Card className="col-span-2 p-6 border-none shadow-sm bg-white">
                     <div className="mb-6">
-                        <h3 className="text-lg font-bold">Sales Overview</h3>
+                        <h3 className="text-lg font-bold">Sales Overview (Dummy Data)</h3>
                     </div>
                     <div className="h-[300px]">
                         <ResponsiveContainer width="100%" height="100%">
@@ -139,7 +156,7 @@ export default function AdminDashboard() {
                 {/* Categories Pie Chart */}
                 <Card className="p-6 border-none shadow-sm bg-white">
                     <div className="mb-6">
-                        <h3 className="text-lg font-bold">Sales via Category</h3>
+                        <h3 className="text-lg font-bold">Sales via Category (Dummy Data)</h3>
                     </div>
                     <div className="h-[300px] flex justify-center">
                         <ResponsiveContainer width="100%" height="100%">
@@ -171,8 +188,6 @@ export default function AdminDashboard() {
                     </div>
                 </Card>
             </div>
-
-            {/* Recent Orders Table could go here */}
         </div>
     )
 }
